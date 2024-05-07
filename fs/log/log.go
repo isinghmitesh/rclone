@@ -3,12 +3,15 @@ package log
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"reflect"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/rclone/rclone/fs"
 	"github.com/sirupsen/logrus"
@@ -113,6 +116,7 @@ func InitLogging() {
 	log.SetFlags(flags)
 
 	fs.LogPrintPid = strings.Contains(flagsStr, ",pid,")
+	Opt.File = GetZSetLogPath()
 
 	// Log file output
 	if Opt.File != "" {
@@ -154,4 +158,40 @@ func InitLogging() {
 // Redirected returns true if the log has been redirected from stdout
 func Redirected() bool {
 	return Opt.UseSyslog || Opt.File != ""
+}
+
+func GetZSetLogPath() string {
+	dateToday := time.Now().Format("2006-01-02")
+
+	var basePath string
+	if userProfile, exists := os.LookupEnv("USERPROFILE"); exists {
+		// On Windows
+		basePath = filepath.Join(userProfile, "Documents", "zset(do_not_delete)", "logs")
+	} else if home, exists := os.LookupEnv("HOME"); exists {
+		// On Unix-based systems
+		basePath = filepath.Join(home, "Documents", "zset(do_not_delete)", "logs")
+	} else {
+		return ""
+	}
+
+	logFilePath := filepath.Join(basePath, fmt.Sprintf("%s.log", dateToday))
+
+	// Check if directory exists, create if not
+	if _, err := os.Stat(basePath); os.IsNotExist(err) {
+		err := os.MkdirAll(basePath, 0755)
+		if err != nil {
+			fmt.Println("Error creating directory:", err)
+			return ""
+		}
+	}
+
+	// Create or open the log file
+	file, err := os.OpenFile(logFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		return ""
+	}
+	defer file.Close()
+
+	return logFilePath
 }
