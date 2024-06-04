@@ -163,7 +163,7 @@ func NewConfig() *ConfigInfo {
 	c := new(ConfigInfo)
 
 	// Set any values which aren't the zero for the type
-	c.LogLevel = LogLevelNotice
+	c.LogLevel = LogLevelDebug
 	c.StatsLogLevel = LogLevelInfo
 	c.ModifyWindow = time.Nanosecond
 	c.Checkers = 8
