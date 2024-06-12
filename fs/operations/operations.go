@@ -1588,11 +1588,7 @@ func copyDest(ctx context.Context, fdst fs.Fs, dst, src fs.Object, CopyDest, bac
 			fs.Debugf(src, "Destination found in --copy-dest, using server-side copy")
 			return true, nil
 		}
-		if fdst.Name() == "local" {
-			fs.Debugf(src, "LUnchanged skipping")
-		} else {
-			fs.Debugf(src, "Unchanged skipping")
-		}
+		fs.Debugf(src, "Unchanged skipping")
 		return true, nil
 	}
 	fs.Debugf(src, "Destination not found in --copy-dest")
@@ -1671,11 +1667,7 @@ func NeedTransfer(ctx context.Context, dst, src fs.Object) bool {
 			opt := defaultEqualOpt(ctx)
 			opt.forceModTimeMatch = true
 			if equal(ctx, src, dst, opt) {
-				if dst.Fs().Name() == "local" {
-					fs.Debugf(src, "LUnchanged skipping")
-				} else {
-					fs.Debugf(src, "Unchanged skipping")
-				}
+				fs.Debugf(src, "Unchanged skipping")
 				return false
 			}
 		default:
@@ -1695,12 +1687,7 @@ func NeedTransfer(ctx context.Context, dst, src fs.Object) bool {
 			return !equalFn(ctx, src, dst)
 		}
 		if Equal(ctx, src, dst) && !SameObject(src, dst) {
-			if dst.Fs().Name() == "local" {
-				fs.Debugf(src, "LUnchanged skipping")
-			} else {
-				fs.Debugf(src, "Unchanged skipping")
-
-			}
+			fs.Debugf(src, "Unchanged skipping")
 			return false
 		}
 	}

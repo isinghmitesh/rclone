@@ -215,12 +215,7 @@ func (c *copy) updateOrPut(ctx context.Context, in io.ReadCloser, uploadOptions 
 	if c.doUpdate {
 		actionTaken = "Copied (replaced existing)"
 	} else {
-		// if destination is local then actionTaken is "LCopied (new)"
-		if newDst.Fs().Name() == "local" {
-			actionTaken = "LCopied (new)"
-		} else {
-			actionTaken = "Copied (new)"
-		}
+		actionTaken = "Copied (new)"
 	}
 	return actionTaken, newDst, err
 }
