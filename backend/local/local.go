@@ -976,7 +976,7 @@ func (o *Object) String() string {
 	if o == nil {
 		return "<nil>"
 	}
-	return o.remote
+	return o.path
 }
 
 // Remote returns the remote path

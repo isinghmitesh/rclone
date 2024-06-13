@@ -215,7 +215,11 @@ func (c *copy) updateOrPut(ctx context.Context, in io.ReadCloser, uploadOptions 
 	if c.doUpdate {
 		actionTaken = "Copied (replaced existing)"
 	} else {
-		actionTaken = "Copied (new)"
+		if newDst.Fs().Name() == "local" {
+			actionTaken = "LCopied (new)"
+		} else {
+			actionTaken = "Copied (new)"
+		}
 	}
 	return actionTaken, newDst, err
 }
@@ -354,10 +358,14 @@ func (c *copy) copy(ctx context.Context) (newDst fs.Object, err error) {
 	}
 
 	// Log what we have done
-	if newDst != nil && c.src.String() != newDst.String() {
-		actionTaken = fmt.Sprintf("%s to: %s", actionTaken, newDst.String())
+	// if newDst != nil && c.src.String() != newDst.String() {
+	// 	actionTaken = fmt.Sprintf("%s to: %s", actionTaken, newDst.String())
+	// }
+	if c.src.Fs().Name() == "local" {
+		fs.Infof(c.src, "%s%s", actionTaken, fs.LogValueHide("size", fs.SizeSuffix(c.src.Size())))
+	} else {
+		fs.Infof(newDst, "%s%s", actionTaken, fs.LogValueHide("size", fs.SizeSuffix(c.src.Size())))
 	}
-	fs.Infof(c.src, "%s%s", actionTaken, fs.LogValueHide("size", fs.SizeSuffix(c.src.Size())))
 
 	return newDst, nil
 }
