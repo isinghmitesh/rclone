@@ -366,7 +366,8 @@ func (c *copy) copy(ctx context.Context) (newDst fs.Object, err error) {
 	if c.src.Fs().Name() == "local" {
 		fs.Infof(c.src, "%s%s", actionTaken, fs.LogValueHide("size", fs.SizeSuffix(c.src.Size())))
 	} else {
-		fs.Infof(newDst, "%s%s", actionTaken, fs.LogValueHide("size", fs.SizeSuffix(c.src.Size())))
+		// fs.Infof(newDst, "%s%s", actionTaken, fs.LogValueHide("size", fs.SizeSuffix(c.src.Size())))
+		fs.Infof(newDst, "%s size: %d", actionTaken, newDst.Size())
 	}
 
 	return newDst, nil

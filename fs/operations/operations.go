@@ -1589,7 +1589,7 @@ func copyDest(ctx context.Context, fdst fs.Fs, dst, src fs.Object, CopyDest, bac
 			return true, nil
 		}
 		if dst.Fs().Name() == "local" {
-			fs.Debugf(dst, "LUnchanged skipping")
+			fs.Debugf(dst, "LUnchanged skipping size: %d", dst.Size())
 		} else {
 			fs.Debugf(src, "Unchanged skipping")
 		}
@@ -1672,7 +1672,7 @@ func NeedTransfer(ctx context.Context, dst, src fs.Object) bool {
 			opt.forceModTimeMatch = true
 			if equal(ctx, src, dst, opt) {
 				if dst.Fs().Name() == "local" {
-					fs.Debugf(dst, "LUnchanged skipping")
+					fs.Debugf(dst, "LUnchanged skipping size: %d", dst.Size())
 				} else {
 					fs.Debugf(src, "Unchanged skipping")
 				}
@@ -1696,7 +1696,7 @@ func NeedTransfer(ctx context.Context, dst, src fs.Object) bool {
 		}
 		if Equal(ctx, src, dst) && !SameObject(src, dst) {
 			if dst.Fs().Name() == "local" {
-				fs.Debugf(dst, "LUnchanged skipping")
+				fs.Debugf(dst, "LUnchanged skipping size: %d", dst.Size())
 			} else {
 				fs.Debugf(src, "Unchanged skipping")
 			}
