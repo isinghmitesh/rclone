@@ -168,6 +168,7 @@ func NewConfig() *ConfigInfo {
 	c.ModifyWindow = time.Nanosecond
 	c.Checkers = 8
 	c.Transfers = 4
+	c.OrderBy = "size,mixed,75"
 	c.ConnectTimeout = 60 * time.Second
 	c.Timeout = 5 * 60 * time.Second
 	c.ExpectContinueTimeout = 1 * time.Second
