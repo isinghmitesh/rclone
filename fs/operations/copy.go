@@ -161,7 +161,13 @@ func (c *copy) multiThreadCopy(ctx context.Context, uploadOptions []fs.OpenOptio
 	if c.doUpdate {
 		actionTaken = "Multi-thread Copied (replaced existing)"
 	} else {
-		actionTaken = "Multi-thread Copied (new)"
+		if newDst != nil {
+			if newDst.Fs().Name() == "local" {
+				actionTaken = "Multi-thread LCopied (new)"
+			} else {
+				actionTaken = "Multi-thread Copied (new)"
+			}
+		}
 	}
 	return actionTaken, newDst, err
 }
